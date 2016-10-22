@@ -5,20 +5,20 @@
 
 @main("Users"){
 
-  <!DOCTYPE html>
-  <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-  </head>
-  <body>
     @users.map { user =>
       <ul>
         <li>@user.UserName</li>
         <li>@user.FullName</li>
         <li>@user.Email</li>
-
       </ul>
+
+      <form method="post" action="@routes.HomeController.addUser()">
+        <input placeholder="Full Name" type="text" name="fullname" />
+        <input placeholder="Username" type="text" name="username" />
+        <input placeholder="Email" type="text" name="email" />
+        <input placeholder="Password" type="text" name="password" />
+
+        <input type="submit">
+      </form>
     }
-  </body>
-  </html>
 }
