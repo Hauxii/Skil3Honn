@@ -1,0 +1,24 @@
+
+@import domain.User
+
+@(users: List[User])
+
+@main("Users"){
+
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+  </head>
+  <body>
+    @users.map { user =>
+      <ul>
+        <li>@user.UserName</li>
+        <li>@user.FullName</li>
+        <li>@user.Email</li>
+
+      </ul>
+    }
+  </body>
+  </html>
+}

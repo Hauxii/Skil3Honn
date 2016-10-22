@@ -2,6 +2,7 @@ package controllers;
 
 import play.mvc.*;
 
+import services.UserService;
 import views.html.*;
 
 /**
@@ -9,6 +10,7 @@ import views.html.*;
  * to the application's home page.
  */
 public class HomeController extends Controller {
+    private UserService _userService = new UserService();
 
     /**
      * An action that renders an HTML page with a welcome message.
@@ -19,5 +21,9 @@ public class HomeController extends Controller {
     public Result index() {
         return ok(index.render("Your new application is ready."));
     }
+
+    public Result getUserById(Long id) {return ok(user.render(_userService.getUserById(id)));}
+
+    public Result getUsers() {return ok(users.render(_userService.getUsers()));}
 
 }
