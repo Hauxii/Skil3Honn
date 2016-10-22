@@ -1,5 +1,8 @@
 package controllers;
 
+import domain.User;
+import play.data.DynamicForm;
+import play.data.Form;
 import play.mvc.*;
 
 import services.UserService;
@@ -25,5 +28,18 @@ public class HomeController extends Controller {
     public Result getUserById(Long id) {return ok(user.render(_userService.getUserById(id)));}
 
     public Result getUsers() {return ok(users.render(_userService.getUsers()));}
+
+    public Result addUser(){
+        DynamicForm form = Form.form().bindFromRequest();
+        System.out.println(form);
+        if(form.hasErrors()){
+            return badRequest();
+        }
+
+        /*if(!user.validate()){
+            return Results.status(412);
+        }*/
+        return created();
+    }
 
 }
