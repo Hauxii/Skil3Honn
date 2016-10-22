@@ -4,6 +4,7 @@ import domain.User;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.*;
+import java.sql.*;
 
 import services.UserService;
 import views.html.*;
@@ -36,10 +37,28 @@ public class HomeController extends Controller {
             return badRequest();
         }
 
+        try{
+            String myDriver = "org.jdbc.mysql.Driver";
+            String myUrl = "jdbc:mysql://localhost/skil3";
+
+            Connection conn = DriverManager.getConnection(myUrl,"root","");
+            Statement st = conn.createStatement();
+
+            // note that i'm leaving "date_created" out of this insert statement
+            st.executeUpdate("INSERT INTO Customers " + "VALUES (1001, 'Simpson', 'Mr.', 'Springfield', 2001)");
+
+            conn.close();
+        }
+        catch(Exception ex){
+            System.out.println("error");
+        }
+
+
+        //System.out.println(form.get("fullname"));
         /*if(!user.validate()){
             return Results.status(412);
         }*/
-        return created();
+        return created(users.render(_userService.getUsers()));
     }
 
 }
