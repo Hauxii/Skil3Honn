@@ -35,11 +35,11 @@ public class HomeController extends Controller {
         if(form.hasErrors()){
             return badRequest();
         }
-
+        System.out.println(form.get("fullname"));
         /*if(!user.validate()){
             return Results.status(412);
         }*/
-        return created();
+        return created(users.render(_userService.getUsers()));
     }
 
 }
