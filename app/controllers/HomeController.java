@@ -6,6 +6,7 @@ import play.data.Form;
 import play.mvc.*;
 import java.sql.*;
 
+import services.ServiceException;
 import services.UserService;
 import views.html.*;
 
@@ -26,16 +27,32 @@ public class HomeController extends Controller {
         return ok(index.render("Your new application is ready."));
     }
 
-    public Result getUserById(Long id) {return ok(user.render(_userService.getUserById(id)));}
+    public Result getUserById(Long id) {
+        try{
+            return ok(user.render(_userService.getUserById(id)));
+        }
+        catch (ServiceException e){
+            return notFound(e.getMessage());
+        }
+
+    }
 
     public Result getUsers() {return ok(users.render(_userService.getUsers()));}
 
     public Result addUser(){
         DynamicForm form = Form.form().bindFromRequest();
-        System.out.println(form);
-        if(form.hasErrors()){
-            return badRequest();
+        try{
+            if(_userService.createUser(form)){
+                return created(users.render(_userService.getUsers()));
+            }
+            else {
+                return internalServerError();
+            }
         }
+        catch (ServiceException e){
+            //return badRequest(e.getMessage());
+        }
+
         try{
             String myDriver = "com.mysql.jdbc.Driver";
             Class.forName(myDriver);
@@ -65,6 +82,7 @@ public class HomeController extends Controller {
             return Results.status(412);
         }*/
         return created(users.render(_userService.getUsers()));
+
     }
 
 }
