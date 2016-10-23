@@ -22,8 +22,7 @@ public class User {
     @Constraints.Required
     public String Password;
 
-    public User(int id, String userName, String fullName, String email, String password){
-        this.ID = id;
+    public User(String userName, String fullName, String email, String password){
         this.UserName = userName;
         this.FullName = fullName;
         this.Email = email;

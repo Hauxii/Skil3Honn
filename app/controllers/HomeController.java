@@ -39,28 +39,22 @@ public class HomeController extends Controller {
 
     public Result getUsers() {return ok(users.render(_userService.getUsers()));}
 
+
     public Result addUser(){
         DynamicForm form = Form.form().bindFromRequest();
+
         try{
-            if(_userService.createUser(form)){
+            if( _userService.createUser(form)){
                 return created(users.render(_userService.getUsers()));
             }
-            else {
+            else{
                 return internalServerError();
             }
         }
-        catch (ServiceException e){
-            //return badRequest(e.getMessage());
+        catch(ServiceException ex){
+            System.out.println(ex.getMessage());
+            return badRequest("Precondition Failed");
         }
-
-
-
-
-        //System.out.println(form.get("fullname"));
-        /*if(!user.validate()){
-            return Results.status(412);
-        }*/
-        return created(users.render(_userService.getUsers()));
 
     }
 

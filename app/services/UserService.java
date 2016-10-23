@@ -3,57 +3,87 @@ package services;
 import domain.User;
 import play.data.DynamicForm;
 import play.data.Form;
+import sun.security.ec.ECDHKeyAgreement;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import play.data.validation.Constraints;
 
 /**
  * Created by Lenny on 22.10.2016.
  */
 public class UserService {
 
-    public List<User> _users;
+
+    Connection conn;
 
     public UserService(){
-        this._users = new ArrayList<>();
-        _users.add(new User(0,"Hauxii", "Haukur Ingi", "haukura14@ru.is", "password"));
-    }
-
-    public User getUserById(Long id) throws ServiceException {
-        for (User user : _users) {
-            if(user.ID == id){
-                return user;
-            }
-        }
-
-        throw new ServiceException("User not found");
-
-    }
-
-    public List<User> getUsers(){
-        return _users;
-    }
-
-    public boolean createUser(DynamicForm form) throws ServiceException {
-        //User user = new User(10, form.get("username"), form.get("fullname"), form.get("email"), form.get("password"));
-        //if(!user.validate()){
-            //throw new ServiceException("Validation error");
-        //}
+        //this._users = new ArrayList<>();
+        //_users.add(new User(0,"Hauxii", "Haukur Ingi", "haukura14@ru.is", "password"));
         try{
             String myDriver = "com.mysql.jdbc.Driver";
             Class.forName(myDriver);
+
         }
         catch (ClassNotFoundException e){
             System.out.println("Class not found: " + e.getMessage());
         }
-        try{
 
+        try{
             String myUrl = "jdbc:mysql://localhost:3306/skil3?autoReconnect=true&useSSL=false";
 
-            Connection conn = DriverManager.getConnection(myUrl,"berglindoma13","Sjonvarp115");
+            conn = DriverManager.getConnection(myUrl,"berglindoma13","Sjonvarp115");
+        }
+        catch(Exception ex){
+            System.out.println(ex.getMessage());
+        }
+
+    }
+
+    public User getUserById(Long id) throws ServiceException {
+        try{
+            Statement st = conn.createStatement();
+            String query = "SELECT * FROM users WHERE id = " + id;
+            ResultSet rs = st.executeQuery(query);
+            User tmp = new User(rs.getString("user_name"), rs.getString("user_fullname"), rs.getString("user_email"), rs.getString("user_password"));
+            return tmp;
+        }
+        catch(Exception ex){
+            System.out.println(ex.getMessage());
+        }
+
+        throw new ServiceException("User not found");
+    }
+
+    public List<User> getUsers(){
+        List<User> _users = new ArrayList<>();
+        try{
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM users");
+
+            while(rs.next()){
+                User tmp = new User(rs.getString("user_name"), rs.getString("user_fullname"), rs.getString("user_email"), rs.getString("user_password"));
+                _users.add(tmp);
+            }
+        }
+        catch(Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    return _users;
+    }
+
+    public boolean createUser(DynamicForm form) throws ServiceException {
+        User user = new User(form.get("username"), form.get("fullname"), form.get("email"), form.get("password"));
+        if(!user.validate()){
+            throw new ServiceException("Validation error");
+        }
+
+        try{
+
             Statement st = conn.createStatement();
 
             String statement = "VALUES ( '" + form.get("fullname") + "', '" + form.get("username") +  "'," + "'" + form.get("email") + "'," + "'" + form.get("password") + "'" + ")";
@@ -61,7 +91,7 @@ public class UserService {
             // note that i'm leaving "date_created" out of this insert statement
             st.executeUpdate("INSERT INTO users (user_fullname, user_name,user_email,user_password)" + statement);
 
-            conn.close();
+            //conn.close();
         }
         catch(Exception ex){
             System.out.println("sql error: " + ex.getMessage());
