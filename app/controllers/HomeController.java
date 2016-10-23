@@ -53,28 +53,7 @@ public class HomeController extends Controller {
             //return badRequest(e.getMessage());
         }
 
-        try{
-            String myDriver = "com.mysql.jdbc.Driver";
-            Class.forName(myDriver);
-        }
-        catch (ClassNotFoundException e){
-            System.out.println("Class not found: " + e.getMessage());
-        }
-        try{
 
-            String myUrl = "jdbc:mysql://localhost:3306/skil3?autoReconnect=true&useSSL=false";
-
-            Connection conn = DriverManager.getConnection(myUrl,"berglindoma13","Sjonvarp115");
-            Statement st = conn.createStatement();
-
-            // note that i'm leaving "date_created" out of this insert statement
-            st.executeUpdate("INSERT INTO users (user_fullname, user_name,user_password)" + "VALUES ('Haukur', 'haukura14', 'bla')");
-
-            conn.close();
-        }
-        catch(Exception ex){
-            System.out.println("sql error: " + ex.getMessage());
-        }
 
 
         //System.out.println(form.get("fullname"));
