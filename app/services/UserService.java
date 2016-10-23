@@ -1,6 +1,8 @@
 package services;
 
 import domain.User;
+import play.data.DynamicForm;
+import play.data.Form;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,18 +19,24 @@ public class UserService {
         _users.add(new User(0,"Hauxii", "Haukur Ingi", "haukura14@ru.is", "password"));
     }
 
-    public User getUserById(Long id) {
+    public User getUserById(Long id) throws ServiceException {
         for (User user : _users) {
             if(user.ID == id){
-                System.out.println(user.FullName);
                 return user;
             }
         }
-        System.out.println("Returning null");
-        return null;
+        throw new ServiceException("User not found");
     }
 
     public List<User> getUsers(){
         return _users;
+    }
+
+    public boolean createUser(DynamicForm form) throws ServiceException {
+        User user = new User(10, form.get("username"), form.get("fullname"), form.get("email"), form.get("password"));
+        if(!user.validate()){
+            throw new ServiceException("Validation error");
+        }
+        return _users.add(user);
     }
 }

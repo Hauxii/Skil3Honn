@@ -28,6 +28,8 @@ public class User {
         this.FullName = fullName;
         this.Email = email;
         this.Password = password;
+        clearValidators();
+        addValidator(new DefaultUserValidator(this));
     }
 
     public boolean validate(){
