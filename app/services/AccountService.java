@@ -27,7 +27,10 @@ public class AccountService extends AppDataContext{
         ObjectNode node = factory.objectNode();
         try{
             Statement st = conn.createStatement();
-            String query = "SELECT * FROM users WHERE user_id = " + id;
+            String query = " SELECT * "
+                    + " FROM users"
+                    + " WHERE user_id = "
+                    + id;
             ResultSet rs = st.executeQuery(query);
             node.put("fullname",rs.getString("user_fullname"));
             node.put("username",rs.getString("user_name"));
@@ -56,7 +59,7 @@ public class AccountService extends AppDataContext{
         catch(Exception ex){
             System.out.println(ex.getMessage());
         }
-    return _users;
+        return _users;
     }
 
     public boolean createUser(JsonNode user) throws ServiceException {
