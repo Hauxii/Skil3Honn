@@ -58,4 +58,17 @@ public class HomeController extends Controller {
 
     }
 
+    public Result deleteUser(Long id){
+        JsonNode user = request().body().asJson();
+        if(_accountService.authenticateUser())
+    }
+
+    public Result authenticateUser(){
+
+    }
+
+    public Result updateUser(){
+
+    }
+
 }

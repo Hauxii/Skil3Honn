@@ -15,5 +15,11 @@ GET     /users                      controllers.HomeController.getUsers
 
 POST    /users                      controllers.HomeController.addUser
 
+DELETE  /users/:id                  controllers.HomeController.deleteUser(id: Long)
+
+POST    /login                      controllers.HomeController.authenticateUser
+
+PUT     /users/:id                  controllers.HomeController.updateUser
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
