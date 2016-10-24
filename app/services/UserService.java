@@ -14,7 +14,7 @@ import java.sql.Statement;
  */
 public class UserService extends AppDataContext{
 
-    public void updateProfile(JsonNode user){
+    public void updateProfile(JsonNode user) throws ServiceException{
 
         String nameOfUser = user.get("username").toString();
         try{
@@ -23,6 +23,7 @@ public class UserService extends AppDataContext{
         }
         catch(Exception ex){
             System.out.println(ex.getMessage());
+            throw new ServiceException("Error updating profile: " + ex.getMessage());
         }
     }
 

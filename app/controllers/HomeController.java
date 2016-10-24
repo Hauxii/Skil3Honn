@@ -9,6 +9,7 @@ import play.twirl.api.Content;
 import scala.util.parsing.json.JSONObject;
 import services.ServiceException;
 import services.AccountService;
+import services.UserService;
 import views.html.*;
 
 /**
@@ -17,6 +18,7 @@ import views.html.*;
  */
 public class HomeController extends Controller {
     private AccountService _accountService = new AccountService();
+    private UserService _userService = new UserService();
 
     /**
      * An action that renders an HTML page with a welcome message.
@@ -56,6 +58,50 @@ public class HomeController extends Controller {
             return badRequest("Precondition Failed");
         }
 
+    }
+
+    public Result deleteUser(Long id){
+        try {
+            _accountService.deleteUser(id);
+            return ok();
+        }
+        catch (ServiceException e){
+            return badRequest(e.getMessage());
+        }
+    }
+
+    public Result authenticateUser(){
+        try{
+            JsonNode user = request().body().asJson();
+            _accountService.authenticateUser(user);
+            return ok();
+        }
+        catch (ServiceException e){
+            return badRequest(e.getMessage());
+        }
+
+    }
+
+    public Result updateUser(){
+        try{
+            JsonNode user = request().body().asJson();
+            _userService.updateProfile(user);
+            return ok();
+        }
+        catch (ServiceException e){
+            return badRequest(e.getMessage());
+        }
+    }
+
+    public Result changePassword() {
+        try{
+            JsonNode user = request().body().asJson();
+            _accountService.changeUserPassword(user);
+            return ok();
+        }
+        catch (ServiceException e){
+            return badRequest(e.getMessage());
+        }
     }
 
 }
