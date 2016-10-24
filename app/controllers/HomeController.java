@@ -1,9 +1,11 @@
 package controllers;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.*;
 
+import scala.util.parsing.json.JSONObject;
 import services.ServiceException;
 import services.AccountService;
 import views.html.*;
@@ -39,6 +41,10 @@ public class HomeController extends Controller {
 
     public Result addUser(){
         DynamicForm form = Form.form().bindFromRequest();
+
+        System.out.println(request().body().asJson());
+        JsonNode user = request().body().asJson();
+        System.out.println(user.get("fullname"));
 
         try{
             if( _accountService.createUser(form)){

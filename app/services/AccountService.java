@@ -77,9 +77,9 @@ public class AccountService {
 
     public boolean createUser(DynamicForm form) throws ServiceException {
         User user = new User(form.get("username"), form.get("fullname"), form.get("email"), form.get("password"));
-        if(!user.validate()){
+        /*if(!user.validate()){
             throw new ServiceException("Validation error");
-        }
+        }*/
 
         try{
 
