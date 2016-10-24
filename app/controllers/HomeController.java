@@ -5,6 +5,7 @@ import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.*;
 
+import play.twirl.api.Content;
 import scala.util.parsing.json.JSONObject;
 import services.ServiceException;
 import services.AccountService;
@@ -29,7 +30,7 @@ public class HomeController extends Controller {
 
     public Result getUserById(Long id) {
         try{
-            return ok(user.render(_accountService.getUserById(id)));
+            return ok(_accountService.getUserById(id));
         }
         catch (ServiceException e){
             return notFound(e.getMessage());
@@ -41,6 +42,8 @@ public class HomeController extends Controller {
 
     public Result addUser(){
         JsonNode user = request().body().asJson();
+
+
 
         try{
             if( _accountService.createUser(user)){
