@@ -2,11 +2,16 @@ package services;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import domain.User;
+import play.api.libs.json.Json;
+
 import play.data.DynamicForm;
 import play.data.Form;
+import scala.util.parsing.json.JSONArray;
+import scala.util.parsing.json.JSONObject;
 import sun.security.ec.ECDHKeyAgreement;
 
 import java.sql.Connection;
@@ -32,11 +37,12 @@ public class AccountService extends AppDataContext{
                     + " WHERE user_id = "
                     + id;
             ResultSet rs = st.executeQuery(query);
-            System.out.println("FULLNAME: " + rs.getString("user_fullname"));
-            node.put("fullname",rs.getString("user_fullname"));
-            node.put("username",rs.getString("user_name"));
-            node.put("email",rs.getString("user_email"));
-            node.put("password",rs.getString("user_password"));
+            while(rs.next()){
+                node.put("fullname",rs.getString("user_fullname"));
+                node.put("username",rs.getString("user_name"));
+                node.put("email",rs.getString("user_email"));
+                node.put("password",rs.getString("user_password"));
+            }
 
             return node;
         }
@@ -48,21 +54,29 @@ public class AccountService extends AppDataContext{
         throw new ServiceException("User not found");
     }
 
-    public List<User> getUsers(){
-        List<User> _users = new ArrayList<>();
-        try{
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM users");
+    public ArrayNode getUsers(){
+        JsonNodeFactory factory = new JsonNodeFactory(false);
 
-            while(rs.next()){
-                User tmp = new User(rs.getString("user_name"), rs.getString("user_fullname"), rs.getString("user_email"), rs.getString("user_password"));
-                _users.add(tmp);
+        ArrayNode listOfUsers = factory.arrayNode();
+
+        try {
+            Statement st = conn.createStatement();
+            String query = " SELECT * "
+                    + " FROM users";
+            ResultSet rs = st.executeQuery(query);
+            while (rs.next()) {
+                ObjectNode node = factory.objectNode();
+                node.put("fullname", rs.getString("user_fullname"));
+                node.put("username", rs.getString("user_name"));
+                node.put("email", rs.getString("user_email"));
+                node.put("password", rs.getString("user_password"));
+                listOfUsers.add(node);
             }
         }
         catch(Exception ex){
             System.out.println(ex.getMessage());
         }
-        return _users;
+        return listOfUsers;
     }
 
     public boolean createUser(JsonNode user) throws ServiceException {
@@ -76,7 +90,15 @@ public class AccountService extends AppDataContext{
 
             Statement st = conn.createStatement();
 
-            String statement = "VALUES ( '" + tmpUser.getFullName() + "', '" + tmpUser.getUserName() +  "'," + "'" + tmpUser.getEmail() + "'," + "'" + tmpUser.getPassword() + "'" + ")";
+            String statement = "VALUES ( "
+                    + tmpUser.getFullName()
+                    + ", "
+                    + tmpUser.getUserName()
+                    +  ","
+                    + tmpUser.getEmail()
+                    + ","
+                    + tmpUser.getPassword()
+                    + ")";
 
             // note that i'm leaving "date_created" out of this insert statement
             st.executeUpdate("INSERT INTO users (user_fullname, user_name,user_email,user_password)" + statement);

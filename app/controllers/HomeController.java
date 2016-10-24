@@ -37,7 +37,7 @@ public class HomeController extends Controller {
         }
     }
 
-    public Result getUsers() {return ok();}
+    public Result getUsers() {return ok(_accountService.getUsers());}
 
 
     public Result addUser(){
