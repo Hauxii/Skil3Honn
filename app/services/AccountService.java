@@ -16,31 +16,7 @@ import java.util.List;
 /**
  * Created by Lenny on 22.10.2016.
  */
-public class AccountService {
-
-
-    Connection conn;
-
-    public AccountService(){
-        try{
-            String myDriver = "com.mysql.jdbc.Driver";
-            Class.forName(myDriver);
-
-        }
-        catch (ClassNotFoundException e){
-            System.out.println("Class not found: " + e.getMessage());
-        }
-
-        try{
-            String myUrl = "jdbc:mysql://localhost:3306/skil3?autoReconnect=true&useSSL=false";
-
-            conn = DriverManager.getConnection(myUrl,"berglindoma13","Sjonvarp115");
-        }
-        catch(Exception ex){
-            System.out.println(ex.getMessage());
-        }
-
-    }
+public class AccountService extends AppDataContext{
 
     public User getUserById(Long id) throws ServiceException {
         try{
@@ -48,7 +24,7 @@ public class AccountService {
             String query = "SELECT * FROM users WHERE user_id = " + id;
             ResultSet rs = st.executeQuery(query);
             User tmp = new User(rs.getString("user_name"), rs.getString("user_fullname"), rs.getString("user_email"), rs.getString("user_password"));
-            System.out.println(tmp.FullName + " " + tmp.UserName);
+            System.out.println(tmp.getFullName() + " " + tmp.getUserName());
             return tmp;
         }
         catch(Exception ex){
