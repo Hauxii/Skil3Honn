@@ -1,13 +1,11 @@
 package controllers;
 
-import domain.User;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.*;
-import java.sql.*;
 
 import services.ServiceException;
-import services.UserService;
+import services.AccountService;
 import views.html.*;
 
 /**
@@ -15,7 +13,7 @@ import views.html.*;
  * to the application's home page.
  */
 public class HomeController extends Controller {
-    private UserService _userService = new UserService();
+    private AccountService _accountService = new AccountService();
 
     /**
      * An action that renders an HTML page with a welcome message.
@@ -29,23 +27,22 @@ public class HomeController extends Controller {
 
     public Result getUserById(Long id) {
         try{
-            return ok(user.render(_userService.getUserById(id)));
+            return ok(user.render(_accountService.getUserById(id)));
         }
         catch (ServiceException e){
             return notFound(e.getMessage());
         }
-
     }
 
-    public Result getUsers() {return ok(users.render(_userService.getUsers()));}
+    public Result getUsers() {return ok(users.render(_accountService.getUsers()));}
 
 
     public Result addUser(){
         DynamicForm form = Form.form().bindFromRequest();
 
         try{
-            if( _userService.createUser(form)){
-                return created(users.render(_userService.getUsers()));
+            if( _accountService.createUser(form)){
+                return created(users.render(_accountService.getUsers()));
             }
             else{
                 return internalServerError();

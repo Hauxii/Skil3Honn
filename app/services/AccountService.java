@@ -11,19 +11,17 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import play.data.validation.Constraints;
+
 
 /**
  * Created by Lenny on 22.10.2016.
  */
-public class UserService {
+public class AccountService {
 
 
     Connection conn;
 
-    public UserService(){
-        //this._users = new ArrayList<>();
-        //_users.add(new User(0,"Hauxii", "Haukur Ingi", "haukura14@ru.is", "password"));
+    public AccountService(){
         try{
             String myDriver = "com.mysql.jdbc.Driver";
             Class.forName(myDriver);
@@ -47,9 +45,10 @@ public class UserService {
     public User getUserById(Long id) throws ServiceException {
         try{
             Statement st = conn.createStatement();
-            String query = "SELECT * FROM users WHERE id = " + id;
+            String query = "SELECT * FROM users WHERE user_id = " + id;
             ResultSet rs = st.executeQuery(query);
             User tmp = new User(rs.getString("user_name"), rs.getString("user_fullname"), rs.getString("user_email"), rs.getString("user_password"));
+            System.out.println(tmp.FullName + " " + tmp.UserName);
             return tmp;
         }
         catch(Exception ex){
