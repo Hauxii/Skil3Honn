@@ -74,6 +74,7 @@ public class HomeController extends Controller {
         try{
             JsonNode user = request().body().asJson();
             _accountService.authenticateUser(user);
+            return ok();
         }
         catch (ServiceException e){
             return badRequest(e.getMessage());
@@ -85,6 +86,17 @@ public class HomeController extends Controller {
         try{
             JsonNode user = request().body().asJson();
             _userService.updateProfile(user);
+            return ok();
+        }
+        catch (ServiceException e){
+            return badRequest(e.getMessage());
+        }
+    }
+
+    public Result changePassword() {
+        try{
+            JsonNode user = request().body().asJson();
+            _accountService.changeUserPassword(user);
         }
         catch (ServiceException e){
             return badRequest(e.getMessage());

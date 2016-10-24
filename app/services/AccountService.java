@@ -110,43 +110,44 @@ public class AccountService extends AppDataContext{
         return true;
     }
 
-    public boolean deleteUser(long id){
+    public void deleteUser(long id) throws ServiceException{
         try{
             Statement st = conn.createStatement();
             String statement = "DELETE * FROM users WHERE id = " + id;
         }
         catch(Exception ex){
             System.out.println(ex.getMessage());
+            throw new ServiceException("Error deleting user: " + ex.getMessage());
         }
 
-        return true;
     }
 
-    public boolean authenticateUser(JsonNode user){
+    public void authenticateUser(JsonNode user) throws ServiceException{
         try{
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery("SELECT * from users WHERE user_name = " + user.get("username").toString());
             while(rs.next()){
                 if(rs.getString("password") == user.get("password").toString()){
-                    return true;
+                    return;
                 }
             }
         }
         catch(Exception ex){
             System.out.println(ex.getMessage());
+            throw new ServiceException("Error authenticating user: " + ex.getMessage());
         }
-        return false;
+        throw new ServiceException("Username and password do not match");
     }
 
-    public boolean changeUserPassword(JsonNode user){
+    public void changeUserPassword(JsonNode user) throws ServiceException{
         try{
             Statement st = conn.createStatement();
             st.executeUpdate("UPDATE users SET user_password = " + user.get("password").toString());
         }
         catch(Exception ex){
             System.out.println(ex.getMessage());
+            throw new ServiceException("Error changin user password: " + ex.getMessage());
         }
-        return false;
     }
 
 
