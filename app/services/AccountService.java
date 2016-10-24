@@ -1,6 +1,9 @@
 package services;
 
+import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import domain.User;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -19,14 +22,18 @@ import java.util.List;
  */
 public class AccountService extends AppDataContext{
 
-    public User getUserById(Long id) throws ServiceException {
+    public JsonNode getUserById(Long id) throws ServiceException {
+        JsonNodeFactory factory = new JsonNodeFactory(false);
+        ObjectNode node = factory.objectNode();
         try{
             Statement st = conn.createStatement();
             String query = "SELECT * FROM users WHERE user_id = " + id;
             ResultSet rs = st.executeQuery(query);
-            User tmp = new User(rs.getString("user_name"), rs.getString("user_fullname"), rs.getString("user_email"), rs.getString("user_password"));
-            System.out.println(tmp.getFullName() + " " + tmp.getUserName());
-            return tmp;
+            node.put("fullname",rs.getString("user_fullname"));
+            node.put("username",rs.getString("user_name"));
+            node.put("email",rs.getString("user_email"));
+            node.put("password",rs.getString("user_password"));
+            return node;
         }
         catch(Exception ex){
             System.out.println(ex.getMessage());
