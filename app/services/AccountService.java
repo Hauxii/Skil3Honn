@@ -138,5 +138,16 @@ public class AccountService extends AppDataContext{
         return false;
     }
 
+    public boolean changeUserPassword(JsonNode user){
+        try{
+            Statement st = conn.createStatement();
+            st.executeUpdate("UPDATE users SET user_password = " + user.get("password").toString());
+        }
+        catch(Exception ex){
+            System.out.println(ex.getMessage());
+        }
+        return false;
+    }
+
 
 }

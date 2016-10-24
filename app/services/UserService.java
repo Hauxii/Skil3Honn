@@ -19,7 +19,7 @@ public class UserService extends AppDataContext{
         String nameOfUser = user.get("username").toString();
         try{
             Statement st = conn.createStatement();
-            st.executeUpdate("UPDATE users SET user_fullname=" + user.get("fullname").toString() +",user_email =" + user.get("email").toString() + ",user_password =" + user.get("password").toString() + " WHERE user_name = " + nameOfUser);
+            st.executeUpdate("UPDATE users SET user_fullname=" + user.get("fullname").toString() +",user_email =" + user.get("email").toString() + " WHERE user_name = " + nameOfUser);
         }
         catch(Exception ex){
             System.out.println(ex.getMessage());
