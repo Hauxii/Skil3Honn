@@ -37,13 +37,11 @@ public class HomeController extends Controller {
         }
     }
 
-    public Result getUsers() {return ok(_accountService.getUsers());}
+    public Result getUsers() {return ok();}
 
 
     public Result addUser(){
         JsonNode user = request().body().asJson();
-
-
 
         try{
             if( _accountService.createUser(user)){
