@@ -108,10 +108,10 @@ public class HomeController extends Controller {
         try {
             JsonNode video = request().body().asJson();
             _userService.addFavoriteVideo(id, video);
-            return created();
+            return ok();
         }
         catch (ServiceException e){
-
+            return badRequest(e.getMessage());
         }
     }
 
@@ -119,9 +119,10 @@ public class HomeController extends Controller {
         try {
             JsonNode friend = request().body().asJson();
             _userService.addCloseFriend(id, friend);
+            return ok();
         }
         catch (ServiceException e){
-
+            return badRequest(e.getMessage());
         }
     }
 

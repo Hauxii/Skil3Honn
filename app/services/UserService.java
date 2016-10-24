@@ -26,7 +26,7 @@ public class UserService extends AppDataContext{
         }
     }
 
-    public boolean addFavoriteVideo(long id, JsonNode video){
+    public void addFavoriteVideo(long id, JsonNode video) throws ServiceException{
         try{
             Statement st = conn.createStatement();
             String statement = "VALUES ( "
@@ -39,27 +39,24 @@ public class UserService extends AppDataContext{
 
 
             st.executeUpdate("INSERT INTO favoritevideos (user_id, video_title,video_url)" + statement);
-            return true;
         }
         catch(Exception ex){
             System.out.println(ex.getMessage());
+            throw new ServiceException("Error adding a favorite video: " + ex.getMessage());
         }
-        return false;
     }
 
-    public boolean deleteFavoriteVideo(JsonNode video){
+    public void deleteFavoriteVideo(JsonNode video) throws ServiceException{
         try{
             Statement st = conn.createStatement();
             st.executeUpdate("DELETE * FROM favoritevideos WHERE video_url = " + video.get("url").toString());
-            return true;
         }
         catch(Exception ex){
-
+            throw new ServiceException("Error removing a favorite video: " + ex.getMessage());
         }
-        return false;
     }
 
-    public boolean addCloseFriend(long id, JsonNode user){
+    public void addCloseFriend(long id, JsonNode user) throws ServiceException{
         try{
             Statement st = conn.createStatement();
             String statement = "VALUES ( "
@@ -68,12 +65,9 @@ public class UserService extends AppDataContext{
                     + user.get("id")
                     + ")";
             st.executeUpdate("INSERT INTO friends(user_id, friend_id)" + statement);
-            return true;
         }
         catch(Exception ex){
-
+            throw new ServiceException("Error adding a close friend: " + ex.getMessage());
         }
-
-        return false;
     }
 }
