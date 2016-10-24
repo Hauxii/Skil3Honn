@@ -14,13 +14,13 @@ public class User {
     @Constraints.Required
     public int ID;
     @Constraints.Required
-    public String UserName;
+    private String UserName;
     @Constraints.Required
-    public String FullName;
+    private String FullName;
     @Constraints.Required
-    public String Email;
+    private String Email;
     @Constraints.Required
-    public String Password;
+    private String Password;
 
     public User(String userName, String fullName, String email, String password){
         this.UserName = userName;
@@ -68,5 +68,7 @@ public class User {
     public String getUserName() {
         return UserName;
     }
+
+    public String getPassword(){return Password;}
 
 }
