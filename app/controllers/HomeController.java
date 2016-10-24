@@ -1,12 +1,8 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import play.data.DynamicForm;
-import play.data.Form;
 import play.mvc.*;
 
-import play.twirl.api.Content;
-import scala.util.parsing.json.JSONObject;
 import services.ServiceException;
 import services.AccountService;
 import services.UserService;

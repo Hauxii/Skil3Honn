@@ -1,25 +1,13 @@
 package services;
 
-import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import domain.User;
-import play.api.libs.json.Json;
 
-import play.data.DynamicForm;
-import play.data.Form;
-import scala.util.parsing.json.JSONArray;
-import scala.util.parsing.json.JSONObject;
-import sun.security.ec.ECDHKeyAgreement;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -30,18 +18,61 @@ public class AccountService extends AppDataContext{
     public JsonNode getUserById(Long id) throws ServiceException {
         JsonNodeFactory factory = new JsonNodeFactory(false);
         ObjectNode node = factory.objectNode();
+        ArrayNode favoritevideos = factory.arrayNode();
+        ArrayNode allfriends = factory.arrayNode();
+        int videos[] = new int[100];
+        int counter = 0;
         try{
             Statement st = conn.createStatement();
             String query = " SELECT * "
+                    + " FROM favoritevideos"
+                    + " WHERE user_id = "
+                    + id;
+            ResultSet rs1 = st.executeQuery(query);
+
+            while(rs1.next()){
+                videos[counter++] = rs1.getInt("video_id");
+            }
+            for(int i = 0; i < counter; i++){
+                ResultSet video = st.executeQuery("SELECT * FROM videos WHERE video_id = " + videos[i]);
+                while(video.next()){
+                    ObjectNode nodetmp = factory.objectNode();
+                    nodetmp.put("title", video.getString("video_name"));
+                    nodetmp.put("url", video.getString("video_url"));
+                    favoritevideos.add(nodetmp);
+                }
+            }
+            counter = 0;
+            ResultSet getfriends = st.executeQuery("SELECT * FROM friends WHERE user_id = " + id);
+            int friendlist[] = new int[100];
+            while(getfriends.next()){
+                videos[counter++] = getfriends.getInt("friend_id");
+            }
+
+            for(int j = 0; j < counter; j++){
+                ResultSet friends = st.executeQuery("SELECT * FROM users WHERE user_id = " + videos[j]);
+                while(friends.next()){
+                    ObjectNode nodetmp = factory.objectNode();
+                    nodetmp.put("name", friends.getString("user_fullname"));
+                    nodetmp.put("email", friends.getString("user_email"));
+                    allfriends.add(nodetmp);
+                }
+            }
+
+            String query3 = " SELECT * "
                     + " FROM users"
                     + " WHERE user_id = "
                     + id;
-            ResultSet rs = st.executeQuery(query);
-            while(rs.next()){
-                node.put("fullname",rs.getString("user_fullname"));
-                node.put("username",rs.getString("user_name"));
-                node.put("email",rs.getString("user_email"));
-                node.put("password",rs.getString("user_password"));
+            ResultSet rs2 = st.executeQuery(query3);
+
+            while(rs2.next()){
+
+                node.put("fullname",rs2.getString("user_fullname"));
+                node.put("username",rs2.getString("user_name"));
+                node.put("email",rs2.getString("user_email"));
+                node.put("password",rs2.getString("user_password"));
+                node.put("videos", favoritevideos);
+                node.put("friends", allfriends);
             }
 
             return node;

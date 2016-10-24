@@ -1,12 +1,7 @@
 package services;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import domain.User;
-import scala.App;
-import scala.util.parsing.json.JSON;
-import scala.util.parsing.json.JSONObject;
 
-import java.sql.ResultSet;
 import java.sql.Statement;
 
 /**
@@ -33,12 +28,10 @@ public class UserService extends AppDataContext{
                     + id
                     + ", "
                     + video.get("title")
-                    +  ","
-                    + video.get("url")
                     + ")";
 
 
-            st.executeUpdate("INSERT INTO favoritevideos (user_id, video_title,video_url)" + statement);
+            st.executeUpdate("INSERT INTO favoritevideos (user_id, video_title)" + statement);
         }
         catch(Exception ex){
             System.out.println(ex.getMessage());
@@ -49,7 +42,7 @@ public class UserService extends AppDataContext{
     public void deleteFavoriteVideo(JsonNode video) throws ServiceException{
         try{
             Statement st = conn.createStatement();
-            st.executeUpdate("DELETE * FROM favoritevideos WHERE video_url = " + video.get("url").toString());
+            st.executeUpdate("DELETE * FROM favoritevideos WHERE video_title = " + video.get("title").toString());
         }
         catch(Exception ex){
             throw new ServiceException("Error removing a favorite video: " + ex.getMessage());
