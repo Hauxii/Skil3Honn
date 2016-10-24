@@ -32,14 +32,17 @@ public class AccountService extends AppDataContext{
                     + " WHERE user_id = "
                     + id;
             ResultSet rs = st.executeQuery(query);
+            System.out.println("FULLNAME: " + rs.getString("user_fullname"));
             node.put("fullname",rs.getString("user_fullname"));
             node.put("username",rs.getString("user_name"));
             node.put("email",rs.getString("user_email"));
             node.put("password",rs.getString("user_password"));
+
             return node;
         }
         catch(Exception ex){
             System.out.println(ex.getMessage());
+            System.out.println("catching exception in getuserbyid service");
         }
 
         throw new ServiceException("User not found");
@@ -65,6 +68,7 @@ public class AccountService extends AppDataContext{
     public boolean createUser(JsonNode user) throws ServiceException {
         User tmpUser = new User(user.get("username").toString(), user.get("fullname").toString(), user.get("email").toString(), user.get("password").toString());
         if(!tmpUser.validate()){
+            System.out.println("Validation error");
             throw new ServiceException("Validation error");
         }
 
@@ -79,6 +83,7 @@ public class AccountService extends AppDataContext{
         }
         catch(Exception ex){
             System.out.println("sql error: " + ex.getMessage());
+            return false;
         }
         return true;
     }
