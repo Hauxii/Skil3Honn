@@ -116,7 +116,6 @@ public class AccountService extends AppDataContext{
             String statement = "DELETE * FROM users WHERE id = " + id;
         }
         catch(Exception ex){
-            System.out.println(ex.getMessage());
             throw new ServiceException("Error deleting user: " + ex.getMessage());
         }
 
@@ -127,13 +126,12 @@ public class AccountService extends AppDataContext{
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery("SELECT * from users WHERE user_name = " + user.get("username").toString());
             while(rs.next()){
-                if(rs.getString("user_password") == user.get("password").toString()){
+                if(rs.getString("user_password").equals(user.get("password").asText())){
                     return;
                 }
             }
         }
         catch(Exception ex){
-            System.out.println(ex.getMessage());
             throw new ServiceException("Error authenticating user: " + ex.getMessage());
         }
         throw new ServiceException("Username and password do not match");
@@ -145,7 +143,6 @@ public class AccountService extends AppDataContext{
             st.executeUpdate("UPDATE users SET user_password = " + user.get("password").toString() + "WHERE user_id = " + id);
         }
         catch(Exception ex){
-            System.out.println(ex.getMessage());
             throw new ServiceException("Error changin user password: " + ex.getMessage());
         }
     }
