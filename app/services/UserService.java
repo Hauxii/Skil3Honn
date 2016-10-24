@@ -1,5 +1,6 @@
 package services;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import domain.User;
 import scala.App;
 import scala.util.parsing.json.JSON;
@@ -13,12 +14,12 @@ import java.sql.Statement;
  */
 public class UserService extends AppDataContext{
 
-    public void updateProfile(User user2, JSONObject user){
-        
-        String nameOfUser = user2.getUserName();
+    public void updateProfile(JsonNode user){
+
+        String nameOfUser = user.get("username").toString();
         try{
             Statement st = conn.createStatement();
-            st.executeUpdate("UPDATE users SET user_fullname=" + user2.getFullName()+",user_email =" + user2.getEmail() + ",user_password =" + user2.getPassword() + " WHERE user_name = " + nameOfUser);
+            st.executeUpdate("UPDATE users SET user_fullname=" + user.get("fullname").toString() +",user_email =" + user.get("email").toString() + ",user_password =" + user.get("password").toString() + " WHERE user_name = " + nameOfUser);
         }
         catch(Exception ex){
             System.out.println(ex.getMessage());
