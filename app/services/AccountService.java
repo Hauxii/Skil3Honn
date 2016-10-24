@@ -1,5 +1,6 @@
 package services;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import domain.User;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -51,22 +52,20 @@ public class AccountService extends AppDataContext{
     return _users;
     }
 
-    public boolean createUser(DynamicForm form) throws ServiceException {
-        User user = new User(form.get("username"), form.get("fullname"), form.get("email"), form.get("password"));
-        /*if(!user.validate()){
+    public boolean createUser(JsonNode user) throws ServiceException {
+        User tmpUser = new User(user.get("username").toString(), user.get("fullname").toString(), user.get("email").toString(), user.get("password").toString());
+        if(!tmpUser.validate()){
             throw new ServiceException("Validation error");
-        }*/
+        }
 
         try{
 
             Statement st = conn.createStatement();
 
-            String statement = "VALUES ( '" + form.get("fullname") + "', '" + form.get("username") +  "'," + "'" + form.get("email") + "'," + "'" + form.get("password") + "'" + ")";
+            String statement = "VALUES ( '" + tmpUser.getFullName() + "', '" + tmpUser.getUserName() +  "'," + "'" + tmpUser.getEmail() + "'," + "'" + tmpUser.getPassword() + "'" + ")";
 
             // note that i'm leaving "date_created" out of this insert statement
             st.executeUpdate("INSERT INTO users (user_fullname, user_name,user_email,user_password)" + statement);
-
-            //conn.close();
         }
         catch(Exception ex){
             System.out.println("sql error: " + ex.getMessage());
