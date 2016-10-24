@@ -97,6 +97,7 @@ public class HomeController extends Controller {
         try{
             JsonNode user = request().body().asJson();
             _accountService.changeUserPassword(user);
+            return ok();
         }
         catch (ServiceException e){
             return badRequest(e.getMessage());
