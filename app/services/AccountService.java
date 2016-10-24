@@ -100,7 +100,7 @@ public class AccountService extends AppDataContext{
                     + tmpUser.getPassword()
                     + ")";
 
-            // note that i'm leaving "date_created" out of this insert statement
+
             st.executeUpdate("INSERT INTO users (user_fullname, user_name,user_email,user_password)" + statement);
         }
         catch(Exception ex){

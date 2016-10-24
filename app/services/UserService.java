@@ -25,4 +25,43 @@ public class UserService extends AppDataContext{
             System.out.println(ex.getMessage());
         }
     }
+
+    public boolean addFavoriteVideo(long id, JsonNode video){
+        try{
+            Statement st = conn.createStatement();
+            String statement = "VALUES ( "
+                    + id
+                    + ", "
+                    + video.get("title")
+                    +  ","
+                    + video.get("url")
+                    + ")";
+
+
+            st.executeUpdate("INSERT INTO favoritevideos (user_id, video_title,video_url)" + statement);
+            return true;
+        }
+        catch(Exception ex){
+            System.out.println(ex.getMessage());
+        }
+        return false;
+    }
+
+    public boolean deleteFavoriteVideo(JsonNode video){
+        try{
+            Statement st = conn.createStatement();
+            st.executeUpdate("DELETE * FROM favoritevideos WHERE video_url = " + video.get("url").toString());
+            return true;
+        }
+        catch(Exception ex){
+
+        }
+        return false;
+    }
+
+    public boolean addCloseFriend(JsonNode user){
+        
+
+        return false;
+    }
 }
