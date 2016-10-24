@@ -82,10 +82,10 @@ public class HomeController extends Controller {
 
     }
 
-    public Result updateUser(){
+    public Result updateUser(Long id){
         try{
             JsonNode user = request().body().asJson();
-            _userService.updateProfile(user);
+            _userService.updateProfile(id, user);
             return ok();
         }
         catch (ServiceException e){
@@ -93,14 +93,35 @@ public class HomeController extends Controller {
         }
     }
 
-    public Result changePassword() {
+    public Result changePassword(Long id) {
         try{
             JsonNode user = request().body().asJson();
-            _accountService.changeUserPassword(user);
+            _accountService.changeUserPassword(id, user);
             return ok();
         }
         catch (ServiceException e){
             return badRequest(e.getMessage());
+        }
+    }
+
+    public Result addFavoriteVideo(Long id) {
+        try {
+            JsonNode video = request().body().asJson();
+            _userService.addFavoriteVideo(id, video);
+            return created();
+        }
+        catch (ServiceException e){
+
+        }
+    }
+
+    public Result addCloseFriend(Long id) {
+        try {
+            JsonNode friend = request().body().asJson();
+            _userService.addCloseFriend(id, friend);
+        }
+        catch (ServiceException e){
+
         }
     }
 
