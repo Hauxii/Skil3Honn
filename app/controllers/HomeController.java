@@ -36,19 +36,15 @@ public class HomeController extends Controller {
         }
     }
 
-    public Result getUsers() {return ok(users.render(_accountService.getUsers()));}
+    public Result getUsers() {return ok(_accountService.getUsers());}
 
 
     public Result addUser(){
-        DynamicForm form = Form.form().bindFromRequest();
-
-        System.out.println(request().body().asJson());
         JsonNode user = request().body().asJson();
-        System.out.println(user.get("fullname"));
 
         try{
-            if( _accountService.createUser(form)){
-                return created(users.render(_accountService.getUsers()));
+            if( _accountService.createUser(user){
+                return created();
             }
             else{
                 return internalServerError();
