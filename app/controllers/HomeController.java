@@ -43,7 +43,7 @@ public class HomeController extends Controller {
         JsonNode user = request().body().asJson();
 
         try{
-            if( _accountService.createUser(user){
+            if( _accountService.createUser(user)){
                 return created();
             }
             else{
