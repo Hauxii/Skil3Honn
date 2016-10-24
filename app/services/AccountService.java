@@ -109,4 +109,34 @@ public class AccountService extends AppDataContext{
         }
         return true;
     }
+
+    public boolean deleteUser(long id){
+        try{
+            Statement st = conn.createStatement();
+            String statement = "DELETE * FROM users WHERE id = " + id;
+        }
+        catch(Exception ex){
+            System.out.println(ex.getMessage());
+        }
+
+        return true;
+    }
+
+    public boolean authenticateUser(JsonNode user){
+        try{
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * from users WHERE user_name = " + user.get("username").toString());
+            while(rs.next()){
+                if(rs.getString("password") == user.get("password").toString()){
+                    return true;
+                }
+            }
+        }
+        catch(Exception ex){
+            System.out.println(ex.getMessage());
+        }
+        return false;
+    }
+
+
 }
