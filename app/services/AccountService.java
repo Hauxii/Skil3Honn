@@ -127,7 +127,7 @@ public class AccountService extends AppDataContext{
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery("SELECT * from users WHERE user_name = " + user.get("username").toString());
             while(rs.next()){
-                if(rs.getString("password") == user.get("password").toString()){
+                if(rs.getString("user_password") == user.get("password").toString()){
                     return;
                 }
             }
@@ -139,10 +139,10 @@ public class AccountService extends AppDataContext{
         throw new ServiceException("Username and password do not match");
     }
 
-    public void changeUserPassword(JsonNode user) throws ServiceException{
+    public void changeUserPassword(long id, JsonNode user) throws ServiceException{
         try{
             Statement st = conn.createStatement();
-            st.executeUpdate("UPDATE users SET user_password = " + user.get("password").toString());
+            st.executeUpdate("UPDATE users SET user_password = " + user.get("password").toString() + "WHERE user_id = " + id);
         }
         catch(Exception ex){
             System.out.println(ex.getMessage());

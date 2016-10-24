@@ -14,12 +14,11 @@ import java.sql.Statement;
  */
 public class UserService extends AppDataContext{
 
-    public void updateProfile(JsonNode user) throws ServiceException{
+    public void updateProfile(long id, JsonNode user) throws ServiceException{
 
-        String nameOfUser = user.get("username").toString();
         try{
             Statement st = conn.createStatement();
-            st.executeUpdate("UPDATE users SET user_fullname=" + user.get("fullname").toString() +",user_email =" + user.get("email").toString() + " WHERE user_name = " + nameOfUser);
+            st.executeUpdate("UPDATE users SET user_fullname=" + user.get("fullname").toString() +",user_email =" + user.get("email").toString() + " WHERE user_id = " + id);
         }
         catch(Exception ex){
             System.out.println(ex.getMessage());
@@ -60,8 +59,20 @@ public class UserService extends AppDataContext{
         return false;
     }
 
-    public boolean addCloseFriend(JsonNode user){
-        
+    public boolean addCloseFriend(long id, JsonNode user){
+        try{
+            Statement st = conn.createStatement();
+            String statement = "VALUES ( "
+                    + id
+                    + ", "
+                    + user.get("id")
+                    + ")";
+            st.executeUpdate("INSERT INTO friends(user_id, friend_id)" + statement);
+            return true;
+        }
+        catch(Exception ex){
+
+        }
 
         return false;
     }
