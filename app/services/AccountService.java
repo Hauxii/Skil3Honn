@@ -132,7 +132,8 @@ public class AccountService extends AppDataContext{
 
             String checkifuserexists = "SELECT user_name FROM users WHERE user_name = " + tmpUser.getUserName();
             ResultSet rs = st.executeQuery(checkifuserexists);
-            if(rs.wasNull()){
+
+            if(!rs.next()){
                 String statement = "VALUES ( "
                         + tmpUser.getFullName()
                         + ", "
