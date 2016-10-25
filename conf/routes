@@ -7,27 +7,27 @@ GET     /                           controllers.HomeController.index
 # An example controller showing how to use dependency injection
 GET     /count                      controllers.CountController.count
 # An example controller showing how to write asynchronous code
-GET     /message                    controllers.AsyncController.message
+GET     /message                   controllers.AsyncController.message
 
-GET     /users/:id                  controllers.HomeController.getUserById(id: Long)
+GET     /users/:username           controllers.HomeController.getUserById(username: String)
 
-GET     /users                      controllers.HomeController.getUsers
+GET     /users                     controllers.HomeController.getUsers
 
-POST    /users                      controllers.HomeController.addUser
+POST    /users                     controllers.HomeController.addUser
 
-DELETE  /users/:id                  controllers.HomeController.deleteUser(id: Long)
+DELETE  /users/:username           controllers.HomeController.deleteUser(username: String)
 
-POST    /login                      controllers.HomeController.authenticateUser
+POST    /login                     controllers.HomeController.authenticateUser
 
-PUT     /users/:id                  controllers.HomeController.updateUser(id: Long)
+PUT     /users/:username           controllers.HomeController.updateUser(username: String)
 
-PUT     /users/:id/password         controllers.HomeController.changePassword(id: Long)
+PUT     /users/:username/password  controllers.HomeController.changePassword(username: String)
 
-POST    /users/:id/videos           controllers.HomeController.addFavoriteVideo(id: Long)
+POST    /users/:username/videos    controllers.HomeController.addFavoriteVideo(username: String)
 
-POST    /users/:id/friends          controllers.HomeController.addCloseFriend(id: Long)
+POST    /users/:username/friends   controllers.HomeController.addCloseFriend(username: String)
 
-DELETE  /users/:id/videos           controllers.HomeController.deleteFavoriteVideo(id: Long)
+DELETE  /users/:username/videos    controllers.HomeController.deleteFavoriteVideo(username: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

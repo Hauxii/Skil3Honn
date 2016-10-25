@@ -26,9 +26,9 @@ public class HomeController extends Controller {
         return ok(index.render("Your new application is ready."));
     }
 
-    public Result getUserById(Long id) {
+    public Result getUserById(String username) {
         try{
-            return ok(_accountService.getUserByName(id));
+            return ok(_accountService.getUserByName(username));
         }
         catch (ServiceException e){
             return notFound(e.getMessage());
@@ -56,9 +56,9 @@ public class HomeController extends Controller {
 
     }
 
-    public Result deleteUser(Long id){
+    public Result deleteUser(String username){
         try {
-            _accountService.deleteUser(id);
+            _accountService.deleteUser(username);
             return ok();
         }
         catch (ServiceException e){
@@ -78,10 +78,10 @@ public class HomeController extends Controller {
 
     }
 
-    public Result updateUser(Long id){
+    public Result updateUser(String username){
         try{
             JsonNode user = request().body().asJson();
-            _userService.updateProfile(id, user);
+            _userService.updateProfile(username, user);
             return ok();
         }
         catch (ServiceException e){
@@ -89,10 +89,10 @@ public class HomeController extends Controller {
         }
     }
 
-    public Result changePassword(Long id) {
+    public Result changePassword(String username) {
         try{
             JsonNode user = request().body().asJson();
-            _accountService.changeUserPassword(id, user);
+            _accountService.changeUserPassword(username, user);
             return ok();
         }
         catch (ServiceException e){
@@ -100,10 +100,10 @@ public class HomeController extends Controller {
         }
     }
 
-    public Result addFavoriteVideo(Long id) {
+    public Result addFavoriteVideo(String username) {
         try {
             JsonNode video = request().body().asJson();
-            _userService.addFavoriteVideo(id, video);
+            _userService.addFavoriteVideo(username, video);
             return ok();
         }
         catch (ServiceException e){
@@ -111,10 +111,10 @@ public class HomeController extends Controller {
         }
     }
 
-    public Result addCloseFriend(Long id) {
+    public Result addCloseFriend(String username) {
         try {
             JsonNode friend = request().body().asJson();
-            _userService.addCloseFriend(id, friend);
+            _userService.addCloseFriend(username, friend);
             return ok();
         }
         catch (ServiceException e){
@@ -122,10 +122,10 @@ public class HomeController extends Controller {
         }
     }
 
-    public Result deleteFavoriteVideo(Long id) {
+    public Result deleteFavoriteVideo(String username) {
         try {
             JsonNode video = request().body().asJson();
-            _userService.deleteFavoriteVideo(id, video);
+            _userService.deleteFavoriteVideo(username, video);
             return ok();
         }
         catch (ServiceException e){
