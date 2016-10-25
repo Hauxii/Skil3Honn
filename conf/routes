@@ -25,6 +25,14 @@ PUT     /users/:username/password  controllers.HomeController.changePassword(use
 
 POST    /users/:username/videos    controllers.HomeController.addFavoriteVideo(username: String)
 
+GET     /videos                    controllers.HomeController.getAllVideos
+
+GET     /videos/:channel           controllers.HomeController.getVideosByChannel(channel: String)
+
+POST    /videos/:channel           controllers.HomeController.addVideoToChannel(channel: String)
+
+DELETE  /videos                    controllers.HomeController.deleteVideo
+
 POST    /users/:username/friends   controllers.HomeController.addCloseFriend(username: String)
 
 DELETE  /users/:username/videos    controllers.HomeController.deleteFavoriteVideo(username: String)
