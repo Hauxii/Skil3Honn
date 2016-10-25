@@ -122,4 +122,15 @@ public class HomeController extends Controller {
         }
     }
 
+    public Result deleteFavoriteVideo(Long id) {
+        try {
+            JsonNode video = request().body().asJson();
+            _userService.deleteFavoriteVideo(id, video);
+            return ok();
+        }
+        catch (ServiceException e){
+            return badRequest(e.getMessage());
+        }
+    }
+
 }
