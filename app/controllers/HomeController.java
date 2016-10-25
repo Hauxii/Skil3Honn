@@ -6,6 +6,7 @@ import play.mvc.*;
 import services.ServiceException;
 import services.AccountService;
 import services.UserService;
+import services.VideoService;
 import views.html.*;
 
 /**
@@ -15,6 +16,7 @@ import views.html.*;
 public class HomeController extends Controller {
     private AccountService _accountService = new AccountService();
     private UserService _userService = new UserService();
+    private VideoService _videoService = new VideoService();
 
     /**
      * An action that renders an HTML page with a welcome message.
@@ -126,6 +128,47 @@ public class HomeController extends Controller {
         try {
             JsonNode video = request().body().asJson();
             _userService.deleteFavoriteVideo(username, video);
+            return ok();
+        }
+        catch (ServiceException e){
+            return badRequest(e.getMessage());
+        }
+    }
+
+    public  Result getAllVideos() {
+        try {
+            return ok(_videoService.getAllVideos());
+        }
+        catch (ServiceException e){
+            return badRequest(e.getMessage());
+        }
+    }
+
+    public Result getVideosByChannel(String channel){
+        try{
+
+            return ok(_videoService.listAllVideosInChannel(channel));
+        }
+        catch (ServiceException e){
+            return badRequest(e.getMessage());
+        }
+    }
+
+    public Result addVideoToChannel(String channel) {
+        try{
+            JsonNode video = request().body().asJson();
+            _videoService.addVideoToChannel(video, channel);
+            return ok();
+        }
+        catch (ServiceException e){
+            return badRequest(e.getMessage());
+        }
+    }
+
+    public Result deleteVideo(){
+        try {
+            JsonNode video = request().body().asJson();
+            _videoService.RemoveVideo(video.get("videoname").toString());
             return ok();
         }
         catch (ServiceException e){

@@ -37,14 +37,13 @@ public class VideoService extends AppDataContext{
         return listOfVideos;
     }
 
-    public ArrayNode listAllVideosInChannel(JsonNode channel) throws ServiceException{
-        String channelname = channel.get("channel").toString();
+    public ArrayNode listAllVideosInChannel(String channel) throws ServiceException{
         JsonNodeFactory factory = new JsonNodeFactory(false);
 
         ArrayNode listOfChannelVideos = factory.arrayNode();
         try {
             Statement st = conn.createStatement();
-            String getallvideoid = "SELECT * FROM channels WHERE channel_name = " + channelname;
+            String getallvideoid = "SELECT * FROM channels WHERE channel_name = " + "'" + channel + "'";
             ResultSet rs = st.executeQuery(getallvideoid);
 
             while(rs.next()){
@@ -64,14 +63,14 @@ public class VideoService extends AppDataContext{
         return listOfChannelVideos;
     }
 
-    public void addVideoToChannel(JsonNode videoToChannel)throws ServiceException{
+    public void addVideoToChannel(JsonNode video,String channel)throws ServiceException{
         try {
             Statement st = conn.createStatement();
-            String statement = "SELECT video_id FROM videos WHERE video_name = " + videoToChannel.get("videoname");
+            String statement = "SELECT video_id FROM videos WHERE video_name = " + video.get("videoname");
             ResultSet rs = st.executeQuery(statement);
             while(rs.next()){
                 String insert = "INSERT INTO channels (channel_name,video_id) VALUES ("
-                        + videoToChannel.get("channelname")
+                        + "'" + channel + "'"
                         +","
                         + rs.getInt("video_id")
                         + ")";
@@ -93,6 +92,32 @@ public class VideoService extends AppDataContext{
                 videoid = rs.getInt("video_id");
             }
             st.executeUpdate("DELETE FROM channels WHERE video_id = " + videoid);
+        }
+        catch(Exception ex){
+            throw new ServiceException(ex.getMessage());
+        }
+    }
+
+    public void AddVideo(JsonNode video) throws ServiceException{
+        try{
+            Statement st = conn.createStatement();
+
+            String checkifvideoexists = "SELECT video_id FROM videos WHERE video_url = " + video.get("url");
+            ResultSet rs = st.executeQuery(checkifvideoexists);
+
+            if(!rs.next()){
+                String statement = "VALUES ( "
+                        + video.get("title")
+                        + ", "
+                        + video.get("url")
+                        + ")";
+
+
+                st.executeUpdate("INSERT INTO videos (video_name,video_url)" + statement);
+            }
+            else{
+                throw new ServiceException ("Video already exists");
+            }
         }
         catch(Exception ex){
             throw new ServiceException(ex.getMessage());
