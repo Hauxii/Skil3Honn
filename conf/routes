@@ -9,7 +9,7 @@ GET     /count                      controllers.CountController.count
 # An example controller showing how to write asynchronous code
 GET     /message                   controllers.AsyncController.message
 
-GET     /users/:username           controllers.HomeController.getUserById(username: String)
+GET     /users/:username           controllers.HomeController.getUserByUsername(username: String)
 
 GET     /users                     controllers.HomeController.getUsers
 
