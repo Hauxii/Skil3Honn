@@ -49,8 +49,9 @@ public class VideoServiceTest {
     @Test
     public void removeVideo() throws Exception {
         ObjectNode video = new JsonNodeFactory(false).objectNode();
-        video.put("videoname", "PPAP");
+        video.put("videoname", "All by myself");
         video.put("url", "www.youtube.com");
+
         _videoService.addVideoToChannel(video, "BBC");
         _videoService.RemoveVideo(video.get("videoname").toString());
         //TODO: assert that video was removed
