@@ -26,7 +26,7 @@ public class HomeController extends Controller {
         return ok(index.render("Your new application is ready."));
     }
 
-    public Result getUserById(String username) {
+    public Result getUserByUsername(String username) {
         try{
             return ok(_accountService.getUserById(username));
         }
