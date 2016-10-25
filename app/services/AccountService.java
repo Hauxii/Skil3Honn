@@ -110,6 +110,7 @@ public class AccountService extends AppDataContext{
         return listOfUsers;
     }
 
+    //works
     public boolean createUser(JsonNode user) throws ServiceException {
         User tmpUser = new User(user.get("username").toString(), user.get("fullname").toString(), user.get("email").toString(), user.get("password").toString());
         if(!tmpUser.validate()){
