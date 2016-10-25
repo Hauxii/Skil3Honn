@@ -15,7 +15,7 @@ import java.sql.Statement;
  */
 public class AccountService extends AppDataContext{
 
-    public JsonNode getUserById(Long id) throws ServiceException {
+    public JsonNode getUserByName(String username) throws ServiceException {
         JsonNodeFactory factory = new JsonNodeFactory(false);
         ObjectNode node = factory.objectNode();
         ArrayNode favoritevideos = factory.arrayNode();
@@ -24,10 +24,18 @@ public class AccountService extends AppDataContext{
         int counter = 0;
         try{
             Statement st = conn.createStatement();
+
+            String getuserid = "SELECT user_id FROM users WHERE user_name = " + username;
+            ResultSet rs = st.executeQuery(getuserid);
+            int user_id = 0;
+            while(rs.next()){
+                user_id = rs.getInt("user_id");
+            }
+
             String query = " SELECT * "
                     + " FROM favoritevideos"
                     + " WHERE user_id = "
-                    + id;
+                    + user_id;
             ResultSet rs1 = st.executeQuery(query);
 
             while(rs1.next()){
@@ -43,7 +51,7 @@ public class AccountService extends AppDataContext{
                 }
             }
             counter = 0;
-            ResultSet getfriends = st.executeQuery("SELECT * FROM friends WHERE user_id = " + id);
+            ResultSet getfriends = st.executeQuery("SELECT * FROM friends WHERE user_id = " + user_id);
             int friendlist[] = new int[100];
             while(getfriends.next()){
                 videos[counter++] = getfriends.getInt("friend_id");
@@ -62,7 +70,7 @@ public class AccountService extends AppDataContext{
             String query3 = " SELECT * "
                     + " FROM users"
                     + " WHERE user_id = "
-                    + id;
+                    + user_id;
             ResultSet rs2 = st.executeQuery(query3);
 
             while(rs2.next()){
@@ -149,10 +157,16 @@ public class AccountService extends AppDataContext{
         return true;
     }
 
-    public void deleteUser(long id) throws ServiceException{
+    public void deleteUser(String username) throws ServiceException{
         try{
             Statement st = conn.createStatement();
-            String statement = "DELETE * FROM users WHERE id = " + id;
+            String get_userid = "SELECT user_id FROM users WHERE user_name = " + username;
+            ResultSet rs = st.executeQuery(get_userid);
+            int user_id = 0;
+            while(rs.next()){
+                user_id = rs.getInt("user_id");
+            }
+            String statement = "DELETE * FROM users WHERE id = " + user_id;
         }
         catch(Exception ex){
             throw new ServiceException("Error deleting user: " + ex.getMessage());
