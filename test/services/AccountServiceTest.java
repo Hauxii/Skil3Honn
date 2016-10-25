@@ -39,7 +39,7 @@ public class AccountServiceTest {
         user.put("email", "hoskuldur14@ru.is");
         user.put("password", "hossi");
         assertEquals(true, _accountService.createUser(user));
-        _accountService.deleteUser(user.get("username").toString());
+        //_accountService.deleteUser(user.get("username").toString());
     }
 
     @Test
