@@ -87,6 +87,12 @@ public class VideoService extends AppDataContext{
         try{
             Statement st = conn.createStatement();
             st.executeUpdate("DELETE FROM videos WHERE video_name = " + videoname);
+            ResultSet rs = st.executeQuery("SELECT video_id FROM videos WHERE video_name = " + videoname);
+            int videoid = 0;
+            while(rs.next()){
+                videoid = rs.getInt("video_id");
+            }
+            st.executeUpdate("DELETE FROM channels WHERE video_id = " + videoid);
         }
         catch(Exception ex){
             throw new ServiceException(ex.getMessage());
