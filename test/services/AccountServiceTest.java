@@ -39,7 +39,6 @@ public class AccountServiceTest {
         user.put("email", "hoskuldur14@ru.is");
         user.put("password", "hossi");
         assertEquals(true, _accountService.createUser(user));
-        //_accountService.deleteUser(user.get("username").toString());
     }
 
     @Test
@@ -59,14 +58,16 @@ public class AccountServiceTest {
     @Test (expected=ServiceException.class)
     public void authenticateInvalidUser() throws Exception {
         ObjectNode user = new JsonNodeFactory(false).objectNode();
-        user.put("username", "vilhjalmur14");
-        user.put("password", "ekkivilli");
+        user.put("username", "hoskuldur14");
+        user.put("password", "ekkihossi");
         _accountService.authenticateUser(user);
+        assertEquals(false,_accountService.isauthenticated("hoskuldur14"));
     }
 
     @After
     public void tearDown() throws Exception {
         _accountService.deleteUser(_user.get("username").toString());
+        _accountService.deleteUser("hoskuldur14");
     }
 
 }
