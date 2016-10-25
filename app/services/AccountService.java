@@ -148,7 +148,6 @@ public class AccountService extends AppDataContext{
                 st.executeUpdate("INSERT INTO users (user_fullname, user_name,user_email,user_password)" + statement);
             }
             else{
-                System.out.println("User already exists");
                 throw new ServiceException ("User already exists");
             }
         }
