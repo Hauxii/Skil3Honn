@@ -98,7 +98,7 @@ public class VideoService extends AppDataContext{
         }
     }
 
-    public void AddVideo(JsonNode video) throws ServiceException{
+    public void addVideo(JsonNode video) throws ServiceException{
         try{
             Statement st = conn.createStatement();
 
