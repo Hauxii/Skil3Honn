@@ -28,7 +28,7 @@ public class HomeController extends Controller {
 
     public Result getUserByUsername(String username) {
         try{
-            return ok(_accountService.getUserById(username));
+            return ok(_accountService.getUserByName(username));
         }
         catch (ServiceException e){
             return notFound(e.getMessage());
