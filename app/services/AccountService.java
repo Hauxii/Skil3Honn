@@ -25,7 +25,7 @@ public class AccountService extends AppDataContext{
         try{
             Statement st = conn.createStatement();
 
-            String getuserid = "SELECT user_id FROM users WHERE user_name = " + username;
+            String getuserid = "SELECT user_id FROM users WHERE user_name = " + "'" + username + "'";
             ResultSet rs = st.executeQuery(getuserid);
             int user_id = 0;
             while(rs.next()){
@@ -167,7 +167,7 @@ public class AccountService extends AppDataContext{
     public void deleteUser(String username) throws ServiceException{
         try{
             Statement st = conn.createStatement();
-            String get_userid = "SELECT user_id FROM users WHERE user_name = " + username;
+            String get_userid = "SELECT user_id FROM users WHERE user_name = " + "'" + username + "'";
             ResultSet rs = st.executeQuery(get_userid);
             int user_id = 0;
             while(rs.next()){
@@ -224,7 +224,7 @@ public class AccountService extends AppDataContext{
     public boolean isauthenticated(String user_name){
         try{
             Statement st = conn.createStatement();
-            ResultSet authenticated = st.executeQuery("SELECT authenticated FROM users WHERE user_id = "  + user_name);
+            ResultSet authenticated = st.executeQuery("SELECT authenticated FROM users WHERE user_id = "  + "'" + user_name + "'");
             String check = "";
             while(authenticated.next()){
                 check = authenticated.getString("authenticated");

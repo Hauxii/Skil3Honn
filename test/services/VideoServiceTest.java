@@ -1,5 +1,6 @@
 package services;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.After;
@@ -29,11 +30,13 @@ public class VideoServiceTest {
     }
 
     @Test
-    public void addVideoToChannelAllVideos() throws Exception {
+    public void CheckVideoInAllVideos() throws Exception {
         //Check if video added is in all videos list
         ObjectNode video = new JsonNodeFactory(false).objectNode();
         video.put("videoname", "PPAP");
         video.put("url", "www.youtube.com");
+        ArrayNode list =_videoService.getAllVideos();
+        
         //TODO: add and check
     }
 

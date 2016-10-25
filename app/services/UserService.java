@@ -17,7 +17,7 @@ public class UserService extends AppDataContext{
         try{
             Statement st = conn.createStatement();
 
-            ResultSet getuserid = st.executeQuery("SELECT user_id FROM users WHERE user_name = " + username);
+            ResultSet getuserid = st.executeQuery("SELECT user_id FROM users WHERE user_name = " + "'" + username + "'");
             int user_id = 0;
             while(getuserid.next()){
                 user_id = getuserid.getInt("user_id");
@@ -43,7 +43,7 @@ public class UserService extends AppDataContext{
         try{
             Statement st = conn.createStatement();
 
-            ResultSet getuserid = st.executeQuery("SELECT user_id FROM users WHERE user_name = " + username);
+            ResultSet getuserid = st.executeQuery("SELECT user_id FROM users WHERE user_name = " + "'" + username + "'");
             int user_id = 0;
             while(getuserid.next()){
                 user_id = getuserid.getInt("user_id");
@@ -81,7 +81,7 @@ public class UserService extends AppDataContext{
         try{
             Statement st = conn.createStatement();
 
-            ResultSet getuserid = st.executeQuery("SELECT user_id FROM users WHERE user_name = " + username);
+            ResultSet getuserid = st.executeQuery("SELECT user_id FROM users WHERE user_name = " +"'" + username + "'");
             int user_id = 0;
             while(getuserid.next()){
                 user_id = getuserid.getInt("user_id");
@@ -137,7 +137,7 @@ public class UserService extends AppDataContext{
     public boolean isauthenticated(String user_name){
         try{
             Statement st = conn.createStatement();
-            ResultSet authenticated = st.executeQuery("SELECT authenticated FROM users WHERE user_name = "  + user_name);
+            ResultSet authenticated = st.executeQuery("SELECT authenticated FROM users WHERE user_name = "  + "'" + user_name + "'");
             String check = "";
             while(authenticated.next()){
                 check = authenticated.getString("authenticated");
