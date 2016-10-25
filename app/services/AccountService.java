@@ -32,7 +32,7 @@ public class AccountService extends AppDataContext{
                 user_id = rs.getInt("user_id");
             }
 
-            if(isauthenticated(user_id)) {
+            if(isauthenticated(username)) {
                 String query = " SELECT * "
                         + " FROM favoritevideos"
                         + " WHERE user_id = "
@@ -209,7 +209,7 @@ public class AccountService extends AppDataContext{
                 user_id = getuserid.getInt("user_id");
             }
 
-            if(isauthenticated(user_id)){
+            if(isauthenticated(username)){
                 st.executeUpdate("UPDATE users SET user_password = " + user.get("password").toString() + "WHERE user_id = " + user_id);
             }
             else{
@@ -221,10 +221,10 @@ public class AccountService extends AppDataContext{
         }
     }
 
-    private boolean isauthenticated(int user_id){
+    public boolean isauthenticated(String user_name){
         try{
             Statement st = conn.createStatement();
-            ResultSet authenticated = st.executeQuery("SELECT authenticated FROM users WHERE user_id = "  + user_id);
+            ResultSet authenticated = st.executeQuery("SELECT authenticated FROM users WHERE user_id = "  + user_name);
             String check = "";
             while(authenticated.next()){
                 check = authenticated.getString("authenticated");
