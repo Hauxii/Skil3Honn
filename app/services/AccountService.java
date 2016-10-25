@@ -122,18 +122,25 @@ public class AccountService extends AppDataContext{
 
             Statement st = conn.createStatement();
 
-            String statement = "VALUES ( "
-                    + tmpUser.getFullName()
-                    + ", "
-                    + tmpUser.getUserName()
-                    +  ","
-                    + tmpUser.getEmail()
-                    + ","
-                    + tmpUser.getPassword()
-                    + ")";
+            String checkifuserexists = "SELECT user_name FROM users WHERE user_name = " + tmpUser.getUserName();
+            ResultSet rs = st.executeQuery(checkifuserexists);
+            if(rs.wasNull()){
+                String statement = "VALUES ( "
+                        + tmpUser.getFullName()
+                        + ", "
+                        + tmpUser.getUserName()
+                        +  ","
+                        + tmpUser.getEmail()
+                        + ","
+                        + tmpUser.getPassword()
+                        + ")";
 
 
-            st.executeUpdate("INSERT INTO users (user_fullname, user_name,user_email,user_password)" + statement);
+                st.executeUpdate("INSERT INTO users (user_fullname, user_name,user_email,user_password)" + statement);
+            }
+            else{
+                throw new ServiceException ("User already exists");
+            }
         }
         catch(Exception ex){
             System.out.println("sql error: " + ex.getMessage());
