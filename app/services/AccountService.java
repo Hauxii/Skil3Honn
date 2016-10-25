@@ -148,11 +148,11 @@ public class AccountService extends AppDataContext{
                 st.executeUpdate("INSERT INTO users (user_fullname, user_name,user_email,user_password)" + statement);
             }
             else{
+                System.out.println("User already exists");
                 throw new ServiceException ("User already exists");
             }
         }
         catch(Exception ex){
-            System.out.println("sql error: " + ex.getMessage());
             return false;
         }
         return true;
@@ -167,7 +167,8 @@ public class AccountService extends AppDataContext{
             while(rs.next()){
                 user_id = rs.getInt("user_id");
             }
-            String statement = "DELETE * FROM users WHERE id = " + user_id;
+            String statement = "DELETE FROM users WHERE user_id = " + user_id;
+            st.executeUpdate(statement);
         }
         catch(Exception ex){
             throw new ServiceException("Error deleting user: " + ex.getMessage());
