@@ -89,27 +89,30 @@ public class UserService extends AppDataContext{
         }
     }
 
-    //works when JSON includes just the name of the friend
-    public void addCloseFriend(String username, JsonNode user) throws ServiceException{
+    //works when JSON includes just the fullname of the friend
+    public void addCloseFriend(String username, JsonNode friend) throws ServiceException{
         try{
             Statement st = conn.createStatement();
 
-            ResultSet getuserid = st.executeQuery("SELECT user_id FROM users WHERE user_name = " + username);
+            String query = "SELECT user_id FROM users WHERE user_name = " + "'" + username + "'";
+            System.out.println(query);
+            ResultSet getuserid = st.executeQuery(query);
+
             int user_id = 0;
             while(getuserid.next()){
                 user_id = getuserid.getInt("user_id");
             }
 
-            String getUserId = "SELECT user_id FROM users WHERE user_fullname = " + user.get("name").toString();
+            String getUserId = "SELECT user_id FROM users WHERE user_fullname = " + friend.get("name").toString();
             ResultSet result = st.executeQuery(getUserId);
-            int userid = 0;
+            int friendId = 0;
             while(result.next()){
-                userid = result.getInt("user_id");
+                friendId = result.getInt("user_id");
             }
             String statement = "VALUES ( "
                     + user_id
                     + ", "
-                    + userid
+                    + friendId
                     + ")";
             st.executeUpdate("INSERT INTO friends(user_id, friend_id)" + statement);
         }
