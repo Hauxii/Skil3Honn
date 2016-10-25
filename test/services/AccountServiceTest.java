@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import scala.xml.factory.NodeFactory;
 
 import static org.junit.Assert.*;
@@ -30,16 +31,6 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void getUserById() throws Exception {
-
-    }
-
-    @Test
-    public void getUsers() throws Exception {
-
-    }
-
-    @Test
     public void createNonExistingUser() throws Exception {
         //_accountService.createUser(_user);
         ObjectNode user = new JsonNodeFactory(false).objectNode();
@@ -53,23 +44,23 @@ public class AccountServiceTest {
 
     @Test
     public void createExistingUser() throws Exception {
-        //_accountService.createUser(_user);
         assertEquals(false, _accountService.createUser(_user));
     }
 
     @Test
-    public void deleteUser() throws Exception {
-
+    public void authenticateValidUser() throws Exception {
+        ObjectNode user = new JsonNodeFactory(false).objectNode();
+        user.put("username", "vilhjalmur14");
+        user.put("password", "villi");
+        _accountService.authenticateUser(user);
     }
 
-    @Test
-    public void authenticateUser() throws Exception {
-        _accountService.authenticateUser(_user);
-    }
-
-    @Test
-    public void changeUserPassword() throws Exception {
-
+    @Test (expected=ServiceException.class)
+    public void authenticateInvalidUser() throws Exception {
+        ObjectNode user = new JsonNodeFactory(false).objectNode();
+        user.put("username", "vilhjalmur14");
+        user.put("password", "ekkivilli");
+        _accountService.authenticateUser(user);
     }
 
     @After
