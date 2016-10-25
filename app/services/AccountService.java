@@ -224,7 +224,7 @@ public class AccountService extends AppDataContext{
     public boolean isauthenticated(String user_name){
         try{
             Statement st = conn.createStatement();
-            ResultSet authenticated = st.executeQuery("SELECT authenticated FROM users WHERE user_id = "  + "'" + user_name + "'");
+            ResultSet authenticated = st.executeQuery("SELECT authenticated FROM users WHERE user_name = "  + "'" + user_name + "'");
             String check = "";
             while(authenticated.next()){
                 check = authenticated.getString("authenticated");
