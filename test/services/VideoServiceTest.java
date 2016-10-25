@@ -20,7 +20,7 @@ public class VideoServiceTest {
         _video = new JsonNodeFactory(false).objectNode();
         _video.put("videoname", "PPAP");
         _video.put("url", "www.youtube.com");
-        _videoService.addVideo(_video);
+        _videoService.addVideoToChannel(_video, "CNN");
     }
 
     @After
@@ -51,7 +51,8 @@ public class VideoServiceTest {
         ObjectNode video = new JsonNodeFactory(false).objectNode();
         video.put("videoname", "All by myself");
         video.put("url", "www.youtube.com");
-        _videoService.addVideo(video);
+
+        _videoService.addVideoToChannel(video, "BBC");
         _videoService.RemoveVideo(video.get("videoname").toString());
         //TODO: assert that video was removed
     }

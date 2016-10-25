@@ -32,58 +32,63 @@ public class AccountService extends AppDataContext{
                 user_id = rs.getInt("user_id");
             }
 
-            String query = " SELECT * "
-                    + " FROM favoritevideos"
-                    + " WHERE user_id = "
-                    + user_id;
-            ResultSet rs1 = st.executeQuery(query);
+            if(isauthenticated(user_id)) {
+                String query = " SELECT * "
+                        + " FROM favoritevideos"
+                        + " WHERE user_id = "
+                        + user_id;
+                ResultSet rs1 = st.executeQuery(query);
 
-            while(rs1.next()){
-                videos[counter++] = rs1.getInt("video_id");
-            }
-            for(int i = 0; i < counter; i++){
-                ResultSet video = st.executeQuery("SELECT * FROM videos WHERE video_id = " + videos[i]);
-                while(video.next()){
-                    ObjectNode nodetmp = factory.objectNode();
-                    nodetmp.put("title", video.getString("video_name"));
-                    nodetmp.put("url", video.getString("video_url"));
-                    favoritevideos.add(nodetmp);
+                while (rs1.next()) {
+                    videos[counter++] = rs1.getInt("video_id");
                 }
-            }
-            counter = 0;
-            ResultSet getfriends = st.executeQuery("SELECT * FROM friends WHERE user_id = " + user_id);
-            int friendlist[] = new int[100];
-            while(getfriends.next()){
-                videos[counter++] = getfriends.getInt("friend_id");
-            }
-
-            for(int j = 0; j < counter; j++){
-                ResultSet friends = st.executeQuery("SELECT * FROM users WHERE user_id = " + videos[j]);
-                while(friends.next()){
-                    ObjectNode nodetmp = factory.objectNode();
-                    nodetmp.put("name", friends.getString("user_fullname"));
-                    nodetmp.put("email", friends.getString("user_email"));
-                    allfriends.add(nodetmp);
+                for (int i = 0; i < counter; i++) {
+                    ResultSet video = st.executeQuery("SELECT * FROM videos WHERE video_id = " + videos[i]);
+                    while (video.next()) {
+                        ObjectNode nodetmp = factory.objectNode();
+                        nodetmp.put("title", video.getString("video_name"));
+                        nodetmp.put("url", video.getString("video_url"));
+                        favoritevideos.add(nodetmp);
+                    }
                 }
+                counter = 0;
+                ResultSet getfriends = st.executeQuery("SELECT * FROM friends WHERE user_id = " + user_id);
+                int friendlist[] = new int[100];
+                while (getfriends.next()) {
+                    videos[counter++] = getfriends.getInt("friend_id");
+                }
+
+                for (int j = 0; j < counter; j++) {
+                    ResultSet friends = st.executeQuery("SELECT * FROM users WHERE user_id = " + videos[j]);
+                    while (friends.next()) {
+                        ObjectNode nodetmp = factory.objectNode();
+                        nodetmp.put("name", friends.getString("user_fullname"));
+                        nodetmp.put("email", friends.getString("user_email"));
+                        allfriends.add(nodetmp);
+                    }
+                }
+
+                String query3 = " SELECT * "
+                        + " FROM users"
+                        + " WHERE user_id = "
+                        + user_id;
+                ResultSet rs2 = st.executeQuery(query3);
+
+                while (rs2.next()) {
+
+                    node.put("fullname", rs2.getString("user_fullname"));
+                    node.put("username", rs2.getString("user_name"));
+                    node.put("email", rs2.getString("user_email"));
+                    node.put("password", rs2.getString("user_password"));
+                    node.put("videos", favoritevideos);
+                    node.put("friends", allfriends);
+                }
+
+                return node;
             }
-
-            String query3 = " SELECT * "
-                    + " FROM users"
-                    + " WHERE user_id = "
-                    + user_id;
-            ResultSet rs2 = st.executeQuery(query3);
-
-            while(rs2.next()){
-
-                node.put("fullname",rs2.getString("user_fullname"));
-                node.put("username",rs2.getString("user_name"));
-                node.put("email",rs2.getString("user_email"));
-                node.put("password",rs2.getString("user_password"));
-                node.put("videos", favoritevideos);
-                node.put("friends", allfriends);
+            else{
+                throw new ServiceException("User Not authenticated");
             }
-
-            return node;
         }
         catch(Exception ex){
             System.out.println(ex.getMessage());
@@ -133,19 +138,21 @@ public class AccountService extends AppDataContext{
             String checkifuserexists = "SELECT user_name FROM users WHERE user_name = " + tmpUser.getUserName();
             ResultSet rs = st.executeQuery(checkifuserexists);
 
-            if(!rs.next()){
+            if(!rs.next()) {
                 String statement = "VALUES ( "
                         + tmpUser.getFullName()
                         + ", "
                         + tmpUser.getUserName()
-                        +  ","
+                        + ","
                         + tmpUser.getEmail()
                         + ","
                         + tmpUser.getPassword()
+                        + ","
+                        + "FALSE"
                         + ")";
 
 
-                st.executeUpdate("INSERT INTO users (user_fullname, user_name,user_email,user_password)" + statement);
+                st.executeUpdate("INSERT INTO users (user_fullname, user_name,user_email,user_password,authenticated)" + statement);
             }
             else{
                 throw new ServiceException ("User already exists");
@@ -181,6 +188,7 @@ public class AccountService extends AppDataContext{
             ResultSet rs = st.executeQuery("SELECT * from users WHERE user_name = " + user.get("username").toString());
             while(rs.next()){
                 if(rs.getString("user_password").equals(user.get("password").asText())){
+                    st.executeUpdate("UPDATE users SET authenticated = " + "'" + "TRUE" + "'" + "WHERE user_id = " + rs.getInt("user_id"));
                     return;
                 }
             }
@@ -194,17 +202,41 @@ public class AccountService extends AppDataContext{
     public void changeUserPassword(String username, JsonNode user) throws ServiceException{
         try{
             Statement st = conn.createStatement();
+
             ResultSet getuserid = st.executeQuery("SELECT user_id FROM users WHERE user_name = " + username);
             int user_id = 0;
             while(getuserid.next()){
                 user_id = getuserid.getInt("user_id");
             }
-            st.executeUpdate("UPDATE users SET user_password = " + user.get("password").toString() + "WHERE user_id = " + user_id);
+
+            if(isauthenticated(user_id)){
+                st.executeUpdate("UPDATE users SET user_password = " + user.get("password").toString() + "WHERE user_id = " + user_id);
+            }
+            else{
+                throw new ServiceException("User not authenticated");
+            }
         }
         catch(Exception ex){
-            throw new ServiceException("Error changin user password: " + ex.getMessage());
+            throw new ServiceException("Error changing user password: " + ex.getMessage());
         }
     }
 
+    private boolean isauthenticated(int user_id){
+        try{
+            Statement st = conn.createStatement();
+            ResultSet authenticated = st.executeQuery("SELECT authenticated FROM users WHERE user_id = "  + user_id);
+            String check = "";
+            while(authenticated.next()){
+                check = authenticated.getString("authenticated");
+            }
+            if(check.equals("TRUE")){
+                return true;
+            }
+        }
+        catch(Exception ex){
+            System.out.println(ex.getMessage());
+        }
+        return false;
+    }
 
 }
