@@ -12,15 +12,22 @@ public class UserService extends AppDataContext{
 
     //works if you make sure to put username, fullname and email in the JSON that is sent in
     //question? should we make it so that you dont have to change or state all of them?
-    public void updateProfile(long id, JsonNode user) throws ServiceException{
+    public void updateProfile(String username, JsonNode user) throws ServiceException{
 
         try{
             Statement st = conn.createStatement();
+
+            ResultSet getuserid = st.executeQuery("SELECT user_id FROM users WHERE user_name = " + username);
+            int user_id = 0;
+            while(getuserid.next()){
+                user_id = getuserid.getInt("user_id");
+            }
+
             st.executeUpdate("UPDATE users "
                     +"SET user_fullname=" + user.get("fullname").toString()
                     +",user_name = " + user.get("username").toString()
                     +",user_email =" + user.get("email").toString()
-                    +" WHERE user_id = " + id);
+                    +" WHERE user_id = " + user_id);
         }
         catch(Exception ex){
             System.out.println(ex.getMessage());
@@ -29,9 +36,15 @@ public class UserService extends AppDataContext{
     }
 
     //works
-    public void addFavoriteVideo(long id, JsonNode video) throws ServiceException{
+    public void addFavoriteVideo(String username, JsonNode video) throws ServiceException{
         try{
             Statement st = conn.createStatement();
+
+            ResultSet getuserid = st.executeQuery("SELECT user_id FROM users WHERE user_name = " + username);
+            int user_id = 0;
+            while(getuserid.next()){
+                user_id = getuserid.getInt("user_id");
+            }
 
             String getvideoid = "SELECT video_id FROM videos WHERE video_name = " + video.get("title");
 
@@ -42,7 +55,7 @@ public class UserService extends AppDataContext{
             }
 
             String statement = "VALUES ( "
-                    + id
+                    + user_id
                     + ", "
                     + videoId
                     + ")";
@@ -57,13 +70,19 @@ public class UserService extends AppDataContext{
     }
 
 
-    public void deleteFavoriteVideo(long id,JsonNode video) throws ServiceException{
+    public void deleteFavoriteVideo(String username,JsonNode video) throws ServiceException{
         try{
             Statement st = conn.createStatement();
 
+            ResultSet getuserid = st.executeQuery("SELECT user_id FROM users WHERE user_name = " + username);
+            int user_id = 0;
+            while(getuserid.next()){
+                user_id = getuserid.getInt("user_id");
+            }
+
             st.executeUpdate("DELETE * FROM favoritevideos WHERE video_id = "
                     + video.get("video_id").toString()
-                    + "AND user_id = " + id);
+                    + "AND user_id = " + user_id);
         }
         catch(Exception ex){
             throw new ServiceException("Error removing a favorite video: " + ex.getMessage());
@@ -71,9 +90,15 @@ public class UserService extends AppDataContext{
     }
 
     //works when JSON includes just the name of the friend
-    public void addCloseFriend(long id, JsonNode user) throws ServiceException{
+    public void addCloseFriend(String username, JsonNode user) throws ServiceException{
         try{
             Statement st = conn.createStatement();
+
+            ResultSet getuserid = st.executeQuery("SELECT user_id FROM users WHERE user_name = " + username);
+            int user_id = 0;
+            while(getuserid.next()){
+                user_id = getuserid.getInt("user_id");
+            }
 
             String getUserId = "SELECT user_id FROM users WHERE user_fullname = " + user.get("name").toString();
             ResultSet result = st.executeQuery(getUserId);
@@ -82,7 +107,7 @@ public class UserService extends AppDataContext{
                 userid = result.getInt("user_id");
             }
             String statement = "VALUES ( "
-                    + id
+                    + user_id
                     + ", "
                     + userid
                     + ")";

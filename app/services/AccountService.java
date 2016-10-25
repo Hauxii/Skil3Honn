@@ -190,10 +190,15 @@ public class AccountService extends AppDataContext{
         throw new ServiceException("Username and password do not match");
     }
 
-    public void changeUserPassword(long id, JsonNode user) throws ServiceException{
+    public void changeUserPassword(String username, JsonNode user) throws ServiceException{
         try{
             Statement st = conn.createStatement();
-            st.executeUpdate("UPDATE users SET user_password = " + user.get("password").toString() + "WHERE user_id = " + id);
+            ResultSet getuserid = st.executeQuery("SELECT user_id FROM users WHERE user_name = " + username);
+            int user_id = 0;
+            while(getuserid.next()){
+                user_id = getuserid.getInt("user_id");
+            }
+            st.executeUpdate("UPDATE users SET user_password = " + user.get("password").toString() + "WHERE user_id = " + user_id);
         }
         catch(Exception ex){
             throw new ServiceException("Error changin user password: " + ex.getMessage());
