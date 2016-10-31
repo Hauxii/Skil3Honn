@@ -57,8 +57,8 @@ public class VideoService extends AppDataContext{
                 ResultSet vids = st.executeQuery(getallvideos);
                 while(vids.next()){
                     ObjectNode node = factory.objectNode();
-                    node.put("title", rs.getString("video_name"));
-                    node.put("url", rs.getString("video_url"));
+                    node.put("title", vids.getString("video_name"));
+                    node.put("url", vids.getString("video_url"));
                     listOfChannelVideos.add(node);
                 }
             }
@@ -66,7 +66,7 @@ public class VideoService extends AppDataContext{
         }
         catch(Exception ex){
 
-            //System.out.println(ex.getMessage());
+            System.out.println(ex.getMessage());
         }
         throw new ServiceException("video not found");
     }

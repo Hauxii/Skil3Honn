@@ -56,28 +56,37 @@ public class VideoServiceTest {
         video.put("url", "www.youtube.com");
         _videoService.addVideoToChannel(video,"CNN");
         ArrayNode list =_videoService.listAllVideosInChannel("CNN");
-        /*System.out.println(list);
+
         boolean exists = false;
         for(int i = 0; i < list.size();i++) {
             JsonNode tmp = list.get(i);
-            System.out.println(tmp);
             if(video.get("url").equals(tmp.get("url"))){
                 exists = true;
             }
         }
 
-        assertEquals(true,exists);*/
+        assertEquals(true,exists);
     }
 
     @Test
     public void removeVideo() throws Exception {
         ObjectNode video = new JsonNodeFactory(false).objectNode();
         video.put("title", "All by myself");
-        video.put("url", "www.youtube.com");
+        video.put("url", "www.youtube.com/all-by-myself");
 
+        _videoService.addVideo(video);
         _videoService.addVideoToChannel(video, "BBC");
         _videoService.RemoveVideo(video.get("title").toString());
-        //TODO: assert that video was removed
+
+        ArrayNode list =_videoService.getAllVideos();
+        boolean exists = false;
+        for(int i = 0; i < list.size();i++) {
+            JsonNode tmp = list.get(i);
+            if(video.get("url").equals(tmp.get("url"))){
+                exists = true;
+            }
+        }
+        assertEquals(false, exists);
     }
 
 }
