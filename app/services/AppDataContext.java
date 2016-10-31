@@ -23,7 +23,7 @@ public class AppDataContext {
         try{
             String myUrl = "jdbc:mysql://localhost:3306/skil3?autoReconnect=true&useSSL=false";
 
-            conn = DriverManager.getConnection(myUrl,"berglindoma13","Sjonvarp115");
+            conn = DriverManager.getConnection(myUrl,"root","Sjonvarp115");
         }
         catch(Exception ex){
             System.out.println(ex.getMessage());
