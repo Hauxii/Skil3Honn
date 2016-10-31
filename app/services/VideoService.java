@@ -45,9 +45,15 @@ public class VideoService extends AppDataContext{
             Statement st = conn.createStatement();
             String getallvideoid = "SELECT * FROM channels WHERE channel_name = " + "'" + channel + "'";
             ResultSet rs = st.executeQuery(getallvideoid);
-
+            int videos[] = new int[100];
+            int counter = 0;
             while(rs.next()){
-                String getallvideos = "SELECT * FROM videos WHERE video_id = " + rs.getInt("video_id");
+                videos[counter++] = rs.getInt("video_id");
+
+            }
+
+            for(int i = 0; i < counter; i++){
+                String getallvideos = "SELECT * FROM videos WHERE video_id = " + videos[i];
                 ResultSet vids = st.executeQuery(getallvideos);
                 while(vids.next()){
                     ObjectNode node = factory.objectNode();
@@ -56,19 +62,21 @@ public class VideoService extends AppDataContext{
                     listOfChannelVideos.add(node);
                 }
             }
+            return listOfChannelVideos;
         }
         catch(Exception ex){
-            throw new ServiceException(ex.getMessage());
+
+            //System.out.println(ex.getMessage());
         }
-        return listOfChannelVideos;
+        throw new ServiceException("video not found");
     }
 
     public void addVideoToChannel(JsonNode video,String channel)throws ServiceException{
         try {
             Statement st = conn.createStatement();
-            String statement = "SELECT video_id FROM videos WHERE video_name = " + video.get("videoname");
+            String statement = "SELECT video_id FROM videos WHERE video_name = " + video.get("title");
             ResultSet rs = st.executeQuery(statement);
-            while(rs.next()){
+            if(rs.next()){
                 String insert = "INSERT INTO channels (channel_name,video_id) VALUES ("
                         + "'" + channel + "'"
                         +","
@@ -76,9 +84,13 @@ public class VideoService extends AppDataContext{
                         + ")";
                 st.executeUpdate(insert);
             }
+            else{
+                throw new ServiceException("Video Doesnt Exists");
+            }
         }
         catch(Exception ex){
-            throw new ServiceException(ex.getMessage());
+            //throw new ServiceException(ex.getMessage());
+            System.out.println(ex.getMessage());
         }
     }
 
@@ -86,9 +98,9 @@ public class VideoService extends AppDataContext{
         try{
             Statement st = conn.createStatement();
             st.executeUpdate("DELETE FROM videos WHERE video_name = " + videoname);
-            ResultSet rs = st.executeQuery("SELECT video_id FROM videos WHERE video_name = " + videoname);
+            ResultSet rs = st.executeQuery("SELECT video_id FROM videos WHERE video_name = " + "'" + videoname + "'");
             int videoid = 0;
-            while(rs.next()){
+            if(rs.next()){
                 videoid = rs.getInt("video_id");
             }
             st.executeUpdate("DELETE FROM channels WHERE video_id = " + videoid);
