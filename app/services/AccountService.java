@@ -159,7 +159,9 @@ public class AccountService extends AppDataContext{
             }
         }
         catch(Exception ex){
-            return false;
+            throw new ServiceException ("User already exists");
+            //System.out.println(ex.getMessage());
+            //return false;
         }
         return true;
     }

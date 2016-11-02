@@ -97,7 +97,7 @@ public class VideoService extends AppDataContext{
     public void RemoveVideo(String videoname) throws ServiceException{
         try{
             Statement st = conn.createStatement();
-            st.executeUpdate("DELETE FROM videos WHERE video_name = " + videoname);
+            st.executeUpdate("DELETE FROM videos WHERE video_name = " + "'" + videoname + "'");
             ResultSet rs = st.executeQuery("SELECT video_id FROM videos WHERE video_name = " + "'" + videoname + "'");
             int videoid = 0;
             if(rs.next()){

@@ -115,7 +115,7 @@ public class UserService extends AppDataContext{
 
             if(isauthenticated(username)) {
 
-                String getUserId = "SELECT user_id FROM users WHERE user_fullname = " + friend.get("name").toString();
+                String getUserId = "SELECT user_id FROM users WHERE user_name = " + friend.get("username").toString();
                 ResultSet result = st.executeQuery(getUserId);
                 int friendId = 0;
                 while (result.next()) {

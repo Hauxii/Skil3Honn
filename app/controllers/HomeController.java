@@ -53,7 +53,7 @@ public class HomeController extends Controller {
         }
         catch(ServiceException ex){
             System.out.println(ex.getMessage());
-            return badRequest("Precondition Failed");
+            return badRequest(ex.getMessage());
         }
 
     }
@@ -165,11 +165,21 @@ public class HomeController extends Controller {
         }
     }
 
-    public Result deleteVideo(){
+    public Result deleteVideo(String title){
         try {
-            JsonNode video = request().body().asJson();
-            _videoService.RemoveVideo(video.get("videoname").toString());
+            _videoService.RemoveVideo(title);
             return ok();
+        }
+        catch (ServiceException e){
+            return badRequest(e.getMessage());
+        }
+    }
+
+    public Result addVideo() {
+        try{
+            JsonNode video = request().body().asJson();
+            _videoService.addVideo(video);
+            return created();
         }
         catch (ServiceException e){
             return badRequest(e.getMessage());

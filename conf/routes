@@ -27,11 +27,13 @@ POST    /users/:username/videos    controllers.HomeController.addFavoriteVideo(u
 
 GET     /videos                    controllers.HomeController.getAllVideos
 
+POST    /videos                     controllers.HomeController.addVideo
+
 GET     /videos/:channel           controllers.HomeController.getVideosByChannel(channel: String)
 
 POST    /videos/:channel           controllers.HomeController.addVideoToChannel(channel: String)
 
-DELETE  /videos                    controllers.HomeController.deleteVideo
+DELETE  /videos/:title             controllers.HomeController.deleteVideo(title: String)
 
 POST    /users/:username/friends   controllers.HomeController.addCloseFriend(username: String)
 
